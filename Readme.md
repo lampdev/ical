@@ -9,9 +9,9 @@ Event time should specify in [UNIX Timestamp](http://www.unixtimestamp.com/) for
 <br>
 
 ###How to use:
-1. Create an object of iCal class and pass the required options to its constructor. The required options are: SES API key and secret and a verified SES From: email.
-2. You can set the region of AWS by calling ::setRegion() method (not a required step)
-3. Setup .ics configuration, it should be an array - see iCal.lib.example.php.
+* Create an object of iCal class and pass the required options to its constructor. The required options are: SES API key and secret and a verified SES From: email.
+* You can set the region of AWS by calling ::setRegion() method (not a required step)
+* Setup .ics configuration, it should be an array - see iCal.lib.example.php.
 ```php
 	//config for .ics
 	$icsConfig = array(
@@ -31,6 +31,6 @@ Event time should specify in [UNIX Timestamp](http://www.unixtimestamp.com/) for
 		'organizerEmail' => 'john.doe@gmail.com'
 	);
 ```
-    The required options here are: toEmail, event start time, organizer name and location.  
-4. Call object function send() with the array from p.3 as the only parameter.
-5. ::send() returns true or false dependnig on the result.
+The required options here are: toEmail, event start time, organizer name and location.  
+* Call object function send() with the array from p.3 as the only parameter.
+* ::send() returns true or false dependnig on the result.
