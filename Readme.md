@@ -31,6 +31,6 @@ Event time should specify in [UNIX Timestamp](http://www.unixtimestamp.com/) for
 		'organizerEmail' => 'john.doe@gmail.com'
 	);
 ```
-The required options here are: toEmail, event start time, organizer name and location.  
+    The required options here are: toEmail, event start time, organizer name and location.  
 4. Call object function send() with the array from p.3 as the only parameter.
 5. ::send() returns true or false dependnig on the result.
