@@ -22,178 +22,178 @@ use Aws\Ses\Exception\SesException as SesException;
 
 class iCal{
 
-	/**
-	* @var iCal
-	*/
-	private $_client;
-	/**
-	* @var string
-	*
-	* multiline text
-	*/
-	private $_body = '';
-	/**
-	* Storage for errors. Can be get with getError() function
-	*
-	* @var string
-	*
-	* string 
-	*/
-	private $_error = '';
-	/**
-	* Region. Can be set with setRegion() function
-	*
-	* @var string
-	*/
-	private $_region = 'us-west-2';
-	/**
-	*/
-	private $_from;
+    /**
+    * @var iCal
+    */
+    private $_client;
+    /**
+    * @var string
+    *
+    * multiline text
+    */
+    private $_body = '';
+    /**
+    * Storage for errors. Can be get with getError() function
+    *
+    * @var string
+    *
+    * string 
+    */
+    private $_error = '';
+    /**
+    * Region. Can be set with setRegion() function
+    *
+    * @var string
+    */
+    private $_region = 'us-west-2';
+    /**
+    */
+    private $_from;
 
 
-	/**
-	* this function was started when iCal object was created;
-	* Ses Client was created in it
-	*/
-	public function __construct($config){
+    /**
+    * this function was started when iCal object was created;
+    * Ses Client was created in it
+    */
+    public function __construct($config){
 
-		if(!empty($config['region'])){
-			$this->_region = $config['region'];
-		}
+        if(!empty($config['region'])){
+            $this->_region = $config['region'];
+        }
 
-		if(empty($config['key'])){
-			$this->_error = 'Key required';
-		}
+        if(empty($config['key'])){
+            $this->_error = 'Key required';
+        }
 
-		if(empty($config['secret'])){
-			$this->_error = 'Secret key required';
-		}
+        if(empty($config['secret'])){
+            $this->_error = 'Secret key required';
+        }
 
-		if(!empty($config['fromEmail'])){
+        if(!empty($config['fromEmail'])){
 
-			$this->_from = $config['fromEmail'];	
+            $this->_from = $config['fromEmail'];	
 
-		}else{
+        }else{
 
-			$this->_error = 'From email required';
+            $this->_error = 'From email required';
 
-		}
-		
-		//ses client creating	
-		$this->_client = SesClient::factory(array(
-		    'key' 		=> $config['key'],
-		    'secret'    => $config['secret'],
-		    'region'    => $this->_region,
-		));
+        }
+        
+        //ses client creating	
+        $this->_client = SesClient::factory(array(
+            'key' 		=> $config['key'],
+            'secret'    => $config['secret'],
+            'region'    => $this->_region,
+        ));
 
-	}
-
-
-	/**
-	* Function for getting error;
-	* If there was no error - function return empty string
-	*/
-	public function getError(){
-
-		return $this->_error;
-
-	}
+    }
 
 
-	/**
-	* Function for setting region;
-	* If function was not used - region stay default;
-	* Default region is us-west-2;
-	*/
-	public function setRegion($region){
+    /**
+    * Function for getting error;
+    * If there was no error - function return empty string
+    */
+    public function getError(){
 
-		$this->_region = $region;
+        return $this->_error;
 
-	}
-
+    }
 
 
-	/**
-	*	Function for sending message;
-	* 	It check required configs, build .ics and send it;
-	*
-	*	Require config $icsParams;
-	*	Required values: $icsParams['toEmail'], $icsParams['startTime'], $icsParams['location'];
-	*
-	*	Possible values list:
-	*		'toEmail'		  -  destination email
-	*		'organizerName'	  -  organizer name
-	*		'organizerEmail'  -  organizer email
-	*		'startTime'		  -  event start time in UNIX Timestamp format
-	*		'endTime'		  -  event end time in UNIX Timestamp format
-	*		'description'	  -  event description
-	*		'location'		  -  event location
-	*		'timezone'		  -  event timezone in PHP Timezone format. Full list on https://php.net/manual/en/timezones.php
-	*		'subjectEmail'	  -  email subject
-	*		'subjectEvent'	  -  event subject
-	*	
-	*/
-	public function send($icsParams){
+    /**
+    * Function for setting region;
+    * If function was not used - region stay default;
+    * Default region is us-west-2;
+    */
+    public function setRegion($region){
 
-		if(!empty($this->_error)){
-			return false;
-		}
+        $this->_region = $region;
 
-		$this->_prepareBody($icsParams);
-
-		if(!empty($this->_error)){
-			return false;
-		}
-
-		$emailConfig = array(
-			    'Source'        => $this->_from,
-			    'Destinations'  => array($icsParams['toEmail']),
-			    'RawMessage'    => array(
-			        'Data' => base64_encode($this->_body)
-			    )
-			); 
-
-		return $this->_send($emailConfig);
-
-	}
+    }
 
 
 
-	/**
-	* Function for preparing text message and building .ics
-	*/
-	private function _prepareBody($icsParams){
+    /**
+    *	Function for sending message;
+    * 	It check required configs, build .ics and send it;
+    *
+    *	Require config $icsParams;
+    *	Required values: $icsParams['toEmail'], $icsParams['startTime'], $icsParams['location'];
+    *
+    *	Possible values list:
+    *		'toEmail'		  -  destination email
+    *		'organizerName'	  -  organizer name
+    *		'organizerEmail'  -  organizer email
+    *		'startTime'		  -  event start time in UNIX Timestamp format
+    *		'endTime'		  -  event end time in UNIX Timestamp format
+    *		'description'	  -  event description
+    *		'location'		  -  event location
+    *		'timezone'		  -  event timezone in PHP Timezone format. Full list on https://php.net/manual/en/timezones.php
+    *		'subjectEmail'	  -  email subject
+    *		'subjectEvent'	  -  event subject
+    *	
+    */
+    public function send($icsParams){
 
-		if(empty($icsParams['toEmail'])){
+        if(!empty($this->_error)){
+            return false;
+        }
 
-			$this->_error = 'To Email required';
-			return false;
+        $this->_prepareBody($icsParams);
 
-		}
+        if(!empty($this->_error)){
+            return false;
+        }
 
-		if(empty($icsParams['startTime'])){
+        $emailConfig = array(
+                'Source'        => $this->_from,
+                'Destinations'  => array($icsParams['toEmail']),
+                'RawMessage'    => array(
+                    'Data' => base64_encode($this->_body)
+                )
+            ); 
 
-			$this->_error = 'Event start time required';
-			return false;
+        return $this->_send($emailConfig);
 
-		}
+    }
 
-		if(empty($icsParams['location'])){
 
-			$this->_error = 'Event location required';
-			return false;
 
-		}
+    /**
+    * Function for preparing text message and building .ics
+    */
+    private function _prepareBody($icsParams){
 
-		//there are ses headers
-		$this->addToBody('From:'.$this->_from);
-		$this->addToBody('Subject:'.$icsParams['subjectEmail']);
-		$this->addToBody('Content-Type:text/calendar; charset="UTF-8"; method="REQUEST";');
-		
-		//empty string adding for amazon automatic headers
-		$this->addToBody('');
+        if(empty($icsParams['toEmail'])){
 
-		// building ics body
+            $this->_error = 'To Email required';
+            return false;
+
+        }
+
+        if(empty($icsParams['startTime'])){
+
+            $this->_error = 'Event start time required';
+            return false;
+
+        }
+
+        if(empty($icsParams['location'])){
+
+            $this->_error = 'Event location required';
+            return false;
+
+        }
+
+        //there are ses headers
+        $this->addToBody('From:'.$this->_from);
+        $this->addToBody('Subject:'.$icsParams['subjectEmail']);
+        $this->addToBody('Content-Type:text/calendar; charset="UTF-8"; method="REQUEST";');
+        
+        //empty string adding for amazon automatic headers
+        $this->addToBody('');
+
+        // building ics body
         $this->addToBody('BEGIN:VCALENDAR');
         $this->addToBody('VERSION:2.0');
         $this->addToBody('X-LOTUS-CHARSET:ISO-8859-1');
@@ -215,40 +215,40 @@ class iCal{
         $this->addToBody('END:VEVENT');
         $this->addToBody('END:VCALENDAR',false);
 
-	}
+    }
 
 
 
-	/**
-	* function for adding new line to message
-	*/
-	private function addToBody($str, $addEndLine = true){
+    /**
+    * function for adding new line to message
+    */
+    private function addToBody($str, $addEndLine = true){
 
-		$this->_body .= $addEndLine ? $str."\r\n" : $str;  
+        $this->_body .= $addEndLine ? $str."\r\n" : $str;  
 
-	}
+    }
 
 
 
-	/**
-	* function which sends builded message with Ses Client (uses amazon API)
-	*/
-	private function _send($emailConfig){
+    /**
+    * function which sends builded message with Ses Client (uses amazon API)
+    */
+    private function _send($emailConfig){
 
-		try {
+        try {
 
-		    $this->_client->sendRawEmail($emailConfig);
+            $this->_client->sendRawEmail($emailConfig);
 
-		    return true;
+            return true;
 
-		} catch(SesException $e) {
+        } catch(SesException $e) {
 
-		    $this->_error = 'Got exception: ' . $e->getMessage();
+            $this->_error = 'Got exception: ' . $e->getMessage();
 
-		    return false;
+            return false;
 
-		}
+        }
 
-	}
+    }
 
 }
