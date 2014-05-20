@@ -6,10 +6,10 @@ require_once('iCal.lib.php');
 	//config for new iCal object
 	$configForObject = array(
         // note that this IAM user identified by this key pair MUST be allowed to do the following API calls: sendEmail , sendRawEmail. This is done in AWS IAM.
-		'key'		=> 'xxxxxxxxxxxxxxxxxxxxxx',
-		'secret'	=> 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+		'key'		=> 'xxxxxxxxxxxxxxxxx',
+		'secret'	=> 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
         // this is a verified at SES From: email address. You MUST verify it before sending any emails. This is done in AWS SES -> Email Addresses -> Verify a New Email Address. Or via an API call
-		'fromEmail'	=> 'from@example.com'
+		'fromEmail'	=> '<orders@lamp-dev.com>'
 		);
 
 	//new iCal object with previously created config
@@ -17,16 +17,20 @@ require_once('iCal.lib.php');
 
 	//config for .ics
 	$icsConfig = array(
-		'toEmail'		=> 'to@example.com',
-		'organizerName'	=> 'Example organization name',
-		'organizerEmail'=> 'ExampleOrg@example.com',
-		'startTime'		=> (new \DateTime('2014-11-21 12:00:01'))->getTimestamp(),
-		'endTime'		=> (new \DateTime('2014-11-21 12:00:01'))->getTimestamp(),
-		'description'	=> 'Event description',
-		'location'		=> 'Event location',
-		'timezone'		=> 'Africa/Tunis',  //example timezone from https://php.net/manual/en/timezones.php
-		'subjectEmail'	=> 'Email subject',
-		'subjectEvent'	=> 'Event subject'
+		'toEmail'		 => 'orders@lamp-dev.com',
+		'organizerName'	 => 'Example organization name',
+        'productName'	 => 'Example organization product',
+        'language'       => 'EN',
+		'organizerEmail' => 'orders@lamp-dev.com',
+		'startTime'		 => (new \DateTime('2014-11-21 12:00:00'))->getTimestamp(),
+		'endTime'		 => (new \DateTime('2014-11-21 14:00:00'))->getTimestamp(),
+		'description'	 => 'Event description',
+		'location'		 => 'Event location',
+		'timezone'		 => 'Europe/Amsterdam',  //example timezone from https://php.net/manual/en/timezones.php
+		'subjectEmail'	 => 'Email subject',
+		'subjectEvent'	 => 'Event subject',
+        'organizerName'  => 'John Doe',
+        'organizerEmail' => 'john.doe@gmail.com'
 	);
 
 	//set region

@@ -14,7 +14,7 @@
 * autoload.php was generated with composer for amazon aws sdk
 * details: https://aws.amazon.com/sdkforphp/
 */
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'aws/aws-autoloader.php';
 
 use Aws\Common\Aws;
 use Aws\Ses\SesClient;
@@ -188,30 +188,32 @@ class iCal{
 		//there are ses headers
 		$this->addToBody('From:'.$this->_from);
 		$this->addToBody('Subject:'.$icsParams['subjectEmail']);
-		$this->addToBody('Content-Type:text/calendar; method=CANCEL; charset="UTF-8";');
+		$this->addToBody('Content-Type:text/calendar; charset="UTF-8"; method="REQUEST";');
 		
 		//empty string adding for amazon automatic headers
 		$this->addToBody('');
 
 		// building ics body
-		$this->addToBody('BEGIN:VCALENDAR');
-		$this->addToBody('VERSION:2.0 ');
-		$this->addToBody('BEGIN:VEVENT');
-		$this->addToBody('UID:'.$icsParams['toEmail']);
-
-		//if organizer Email same as sender email ($this->_from) then organizer will not show in gmail
-		$this->addToBody('ORGANIZER;CN='.$icsParams['organizerName'].':mailto:'.$icsParams['organizerEmail']);
-		$this->addToBody('DTSTAMP:'.date('Ymd').'T'.date('His'));
-		$this->addToBody('DTSTART;TZID='.$icsParams['timezone'].':'.date('Ymd',$icsParams['startTime']).'T'.date('His',$icsParams['startTime']));
-		$this->addToBody('DTEND;TZID='.$icsParams['timezone'].':'.date('Ymd',$icsParams['endTime'])  .'T'.date('His',$icsParams['endTime']));
-		
-		//ics subject, description and location
-		$this->addToBody('SUMMARY:'.$icsParams['subjectEvent']);
-		$this->addToBody('DESCRIPTION:'.$icsParams['description']);
-		$this->addToBody('LOCATION:'.$icsParams['location']);
-
-		$this->addToBody('END:VEVENT');
-		$this->addToBody('END:VCALENDAR',false);
+        $this->addToBody('BEGIN:VCALENDAR');
+        $this->addToBody('VERSION:2.0');
+        $this->addToBody('X-LOTUS-CHARSET:ISO-8859-1');
+        $this->addToBody('PRODID:-//'.$icsParams['organizerName'].'//'.$icsParams['productName'].'//'.$icsParams['language']);
+        $this->addToBody('METHOD:REQUEST');
+        $this->addToBody('BEGIN:VTIMEZONE');
+        $this->addToBody('TZID:'.$icsParams['timezone']);
+        $this->addToBody('END:VTIMEZONE');
+        $this->addToBody('BEGIN:VEVENT');
+        $this->addToBody('UID:'.$icsParams['toEmail']);
+        $this->addToBody('CLASS:PUBLIC');
+        $this->addToBody('SUMMARY:'.$icsParams['subjectEvent']);
+        $this->addToBody('DTSTART;TZID='.$icsParams['timezone'].':'.date('Ymd',$icsParams['startTime']).'T'.date('His',$icsParams['startTime']));
+        $this->addToBody('DTEND;TZID='.$icsParams['timezone'].':'.date('Ymd',$icsParams['endTime'])  .'T'.date('His',$icsParams['endTime']));
+        $this->addToBody('DTSTAMP:'.date('Ymd').'T'.date('His'));
+        $this->addToBody('DESCRIPTION:'.$icsParams['description']);
+        $this->addToBody('LOCATION:'.$icsParams['location']);
+        $this->addToBody('ORGANIZER;CN="'.$icsParams['organizerName'].'":MAILTO:'.$icsParams['organizerEmail']);
+        $this->addToBody('END:VEVENT');
+        $this->addToBody('END:VCALENDAR',false);
 
 	}
 
